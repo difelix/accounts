@@ -76,12 +76,12 @@ function deposit(account) {
         ]
     ).then(answer => {
         if (!validateAmount(answer.depositAmount)) {
-            return deposit()
+            return deposit(account)
         }
 
         account.balance = parseFloat(account.balance) + parseFloat(answer.depositAmount)
         updateAccountFile(account)
-        
+
         console.log(chalk.bgGreenBright.blackBright.bold('Depósito realizado com sucesso!'))
         console.log(chalk.bgGreenBright.blackBright.bold(`Seu novo saldo é de: ${account.balance} reais`))
         
@@ -106,4 +106,55 @@ function validateAmount(amount) {
     }
     
     return true
+}
+
+export function initWithdraw() {
+    inquirer.prompt(
+        [
+            {
+                name: 'accountName',
+                message: 'Informe o nome da conta:'
+            }
+        ]
+    ).then(answer => {
+        const account = readAccountFile(answer.accountName)
+
+        if (!account) {
+            console.log(chalk.bgRedBright.blackBright.bold('Conta informada não existe! Tente novamente!'))
+            return startInitialMenu()
+        }
+
+        withdraw(account)
+    }).catch(error => console.log(error))
+}
+
+function withdraw(account) {
+    inquirer.prompt(
+        [
+            {
+                name: 'withdrawAmount',
+                message: 'Informe o valor a ser sacado:'
+            }
+        ]
+    ).then(answer => {
+        if (!validateAmount(answer.withdrawAmount)) {
+            return withdraw(account)
+        }
+
+        const balanceFloat = parseFloat(account.balance)
+        const withdrawAmountFloat = parseFloat(answer.withdrawAmount)
+
+        if (withdrawAmountFloat > balanceFloat) {
+            console.log(chalk.bgRedBright.blackBright.bold('Valor indisponível para saque. Tente novamente'))
+            return withdraw(account)
+        }
+
+        account.balance = balanceFloat - withdrawAmountFloat
+        updateAccountFile(account)
+
+        console.log(chalk.bgGreenBright.blackBright.bold('Saque realizado com sucesso!'))
+        console.log(chalk.bgGreenBright.blackBright.bold(`Seu novo saldo é de: ${account.balance} reais`))
+        
+        return startInitialMenu()
+    }).catch(error => console.log(error))
 }

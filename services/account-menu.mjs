@@ -1,6 +1,6 @@
 import inquirer from "inquirer";
 import chalk from "chalk";
-import { initCreateAccount } from "./account-service.mjs"
+import { initCreateAccount, initWithdraw } from "./account-service.mjs"
 import { consultBalance } from "./account-service.mjs"
 import { initDeposit } from "./account-service.mjs"
 
@@ -32,7 +32,7 @@ export function startInitialMenu() {
                 initDeposit()
                 break
             case withdrawMenu:
-                console.log('Menu de sacar dinheiro')
+                initWithdraw()
                 break
             case exitMenu:
                 console.log(chalk.bgBlueBright.blackBright.bold('Obrigado por utilizar o Accounts!'))
