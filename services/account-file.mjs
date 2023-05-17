@@ -7,6 +7,11 @@ export function getFilePath(accountName) {
     return `${accountsDirectory}/${accountName}.json`
 }
 
+export function existsAccountFile(accountName) {
+    const pathAccountFile = getFilePath(accountName)
+    return fs.existsSync(pathAccountFile)
+}
+
 export function saveAccountFile(accountName) {
     if (!fs.existsSync(accountsDirectory)) {
         fs.mkdirSync(accountsDirectory)
@@ -28,4 +33,22 @@ export function saveAccountFile(accountName) {
     fs.writeFileSync(accountFilePath, accountData)
 
     return true
+}
+
+export function readAccountFile(accountName) {
+    const pathAccountFile = getFilePath(accountName)
+
+    if (fs.existsSync(pathAccountFile)) {
+        const data = fs.readFileSync(pathAccountFile, {encoding: 'utf-8'})
+        const account = JSON.parse(data)
+        return account
+    } else {
+        return false
+    }
+}
+
+export function updateAccountFile(account) {
+    const pathAccountFile = getFilePath(account.name)
+    const data = JSON.stringify(account)
+    fs.writeFileSync(pathAccountFile, data)
 }

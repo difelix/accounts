@@ -1,6 +1,8 @@
 import inquirer from "inquirer";
 import chalk from "chalk";
-import { initCreateAccount } from "./create-account.mjs"
+import { initCreateAccount } from "./account-service.mjs"
+import { consultBalance } from "./account-service.mjs"
+import { initDeposit } from "./account-service.mjs"
 
 const createAccountMenu = 'Criar Conta'
 const consultBalanceMenu = 'Consultar Saldo'
@@ -24,16 +26,16 @@ export function startInitialMenu() {
                 initCreateAccount()
                 break
             case consultBalanceMenu:
-                console.log('Menu de consultar saldo')
+                consultBalance()
                 break
             case depositMenu:
-                console.log('Menu de depositar dinheiro')
+                initDeposit()
                 break
             case withdrawMenu:
                 console.log('Menu de sacar dinheiro')
                 break
             case exitMenu:
-                console.log(chalk.bgRedBright.blackBright.bold('Obrigado por utilizar o Accounts!'))
+                console.log(chalk.bgBlueBright.blackBright.bold('Obrigado por utilizar o Accounts!'))
                 process.exit()
         }
     }).catch(err => console.log(err))
